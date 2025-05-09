@@ -1,0 +1,96 @@
+openapi: 3.0.4
+info:
+  title: Capitole Inditex Service
+  description: |
+    Capitol Inditex service that provides Endpoint to get Price by date/time
+  version: 0.0.1
+tags:
+  - name: price
+    description: Product Prices
+
+servers:
+  - url: http://localhost:8090/
+    description: Api server url
+paths:
+  /api/price:
+    get:
+      tags:
+        - price
+      summary: Get prices
+      description: Get price of product by date.
+      operationId: getPriceByProduct
+      parameters:
+        - in: query
+          name: productId
+          description: productId where price needs to be queried
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: brandId
+          description: brandId where product belongs to
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: date
+          description: date parameter that filers price
+          schema:
+            type: string
+          required: true
+
+
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPriceResponse'
+        '400':
+          description: Bad Request
+        '404':
+          description: Url not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    GetPriceResponse:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          example: 35455
+        brandId:
+          type: integer
+          format: int64
+          example: 1
+        priceList:
+          type: integer
+          format: int32
+          example: 7
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        totalPrice:
+          type: number
+          format: double
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int64
+          example: 100
+        errorMessage:
+          type: string
+          example: This is an error message
