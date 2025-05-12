@@ -2,7 +2,7 @@ package com.capitole.inditex.price.application.service;
 import com.capitole.inditex.price.application.port.inbound.PriceServicePort;
 import com.capitole.inditex.price.application.port.outbound.PriceRepositoryPort;
 import com.capitole.inditex.price.domain.model.Price;
-import com.capitole.inditex.price.domain.model.PriceNotFoundException;
+import com.capitole.inditex.price.domain.model.PriceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,6 @@ public class PriceService implements PriceServicePort {
     public Price getPriceByDate(Long productId, Integer brandId, LocalDateTime date) {
         List<Price> listPrices = priceRepositoryPort.findPriceByDate(productId, brandId, date);
         return listPrices.stream().max(Comparator.comparing(Price::getPriority))
-                .orElseThrow(PriceNotFoundException::notFound);
+                .orElseThrow(PriceException::notFound);
     }
 }

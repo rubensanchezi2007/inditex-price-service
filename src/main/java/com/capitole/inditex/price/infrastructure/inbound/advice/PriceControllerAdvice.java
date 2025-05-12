@@ -1,7 +1,7 @@
 package com.capitole.inditex.price.infrastructure.inbound.advice;
 import com.capitole.inditex.domain.Error;
 import com.capitole.inditex.price.domain.model.PriceError;
-import com.capitole.inditex.price.domain.model.PriceNotFoundException;
+import com.capitole.inditex.price.domain.model.PriceException;
 import com.capitole.inditex.price.infrastructure.inbound.PriceController;
 import com.capitole.inditex.price.infrastructure.inbound.mapper.PriceErrorMapper;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -18,8 +18,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class PriceControllerAdvice extends ResponseEntityExceptionHandler {
     private final PriceErrorMapper priceErrorMapper;
 
-    @ExceptionHandler(PriceNotFoundException.class)
-    ResponseEntity<Error> priceException(final PriceNotFoundException e) {
+    @ExceptionHandler(PriceException.class)
+    ResponseEntity<Error> priceException(final PriceException e) {
         return new ResponseEntity<>(priceErrorMapper.toDTO(PriceError.builder()
                 .errorCode(e.getError().getErrorCode())
                 .errorMessage(e.getError().getErrorMessage())
@@ -32,8 +32,8 @@ public class PriceControllerAdvice extends ResponseEntityExceptionHandler {
     ResponseEntity<Error> priceGeneralError(final Exception e) {
         return new ResponseEntity<>(
                 priceErrorMapper.toDTO(PriceError.builder()
-                        .errorCode(PriceNotFoundException.gateway().getError().getErrorCode())
-                        .errorMessage(PriceNotFoundException.gateway().getError().getErrorMessage())
+                        .errorCode(PriceException.gateway().getError().getErrorCode())
+                        .errorMessage(PriceException.gateway().getError().getErrorMessage())
                         .build()),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );

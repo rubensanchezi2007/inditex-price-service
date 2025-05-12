@@ -2,7 +2,7 @@ package com.capitole.inditex.unit;
 import com.capitole.inditex.price.application.port.outbound.PriceRepositoryPort;
 import com.capitole.inditex.price.application.service.PriceService;
 import com.capitole.inditex.price.domain.model.Price;
-import com.capitole.inditex.price.domain.model.PriceNotFoundException;
+import com.capitole.inditex.price.domain.model.PriceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,9 +50,9 @@ public class PriceServiceTest {
 
     @Test
     public void findPriceByDate_Not_Found() {
-        doThrow(PriceNotFoundException.notFound()).when(priceRepositoryPort).findPriceByDate(any(Long.class), any(Integer.class), any(LocalDateTime.class));
-        PriceNotFoundException thrown = Assertions.assertThrows(
-                PriceNotFoundException.class,
+        doThrow(PriceException.notFound()).when(priceRepositoryPort).findPriceByDate(any(Long.class), any(Integer.class), any(LocalDateTime.class));
+        PriceException thrown = Assertions.assertThrows(
+                PriceException.class,
                 () -> priceService.getPriceByDate(1L, 1, LocalDateTime.parse("2020-06-14 10:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))),
                 "Expected doThing() to throw, but it didn't"
         );
